@@ -1,0 +1,83 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h1>Lockal Account Login</h1>
+        <hr />
+        <form asp-controller="Account" asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly"></div>
+
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <div class="text-danger">
+                    @ViewData["Message"]
+                </div>
+            }
+
+            @*<label asp-for="UserName" class="col-md-2"></label>
+            <div class="col-md-10">
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>*@
+
+            <label asp-for="Email" class="col-md-2"></label>
+            <div class="col-md-10">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <label asp-for="Password" class="col-md-2"></label>
+            <div class="col-md-10">
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RememberMe"></label>
+                <input asp-for="RememberMe" />
+                <span asp-validation-for="RememberMe"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">ورود</button>
+
+            <div>
+                <a asp-action="ForgotPassword">Forgot Password</a>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <h1>External Login</h1>
+        <hr />
+        @{
+            if (Model.ExternalLogins.Count == 0)
+            {
+                <h1>No External Login Configure</h1>
+            }
+            else
+            {
+                <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                    @foreach (var provider in Model.ExternalLogins)
+                    {
+                        <button type="submit" class="btn btn-primary"
+                                name="provider" value="@provider.Name"
+                                title="Login Using Your @provider.DisplayName account">
+                            @provider.DisplayName
+                        </button>
+                    }
+                </form>
+            }
+
+
+        }
+    </div>
+</div>
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+}
